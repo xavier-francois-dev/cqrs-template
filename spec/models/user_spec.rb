@@ -15,12 +15,12 @@ RSpec.describe User, type: :model do
     end
 
     context 'it rejects duplicates' do
-      user = User.new(email: 'valid@example.com', password: 'Password1')
-      user.save!
-      let!(:duplicate_user) { User.new(email: 'valid@example.com', password: 'Password1') }
+      let!(:existing_user) { create(:user) }
+      let!(:duplicate_user) { build(:user, email: existing_user.email) }
 
       it 'should reject duplicates' do
         expect(duplicate_user).not_to be_valid
+        expect(duplicate_user.errors[:email]).to include('has already been taken')
       end
     end
 
